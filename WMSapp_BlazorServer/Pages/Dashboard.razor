@@ -1,8 +1,10 @@
 ﻿@page "/dashboard"
 @inject IDatabaseData db
+@inject NavigationManager navigationManager
 
-<a class="btn btn-primary" asp-page="/CreateVehicle">Create new vehicle</a>
+<button class="btn btn-primary" @onclick="NavigateToNewVehicleComponent">Create New Vehicle</button>
 
+<br />
 <br />
 
 <h2>Vehicles</h2>
@@ -25,9 +27,9 @@
                 <td>@vehicle.BuildNumber</td>
                 <td>@vehicle.Stage</td>
                 <td>
-                    <a class="btn btn-info"
-                       asp-page="/ViewVehicle"
-                       asp-route-activeId="@vehicle.Id">View</a>
+                    <button class="btn btn-primary" @onclick="() => NavigateToVehicleComponent(vehicle.Id)">
+                        View
+                    </button>
                 </td>
             </tr>
         }
@@ -40,6 +42,16 @@
     protected override void OnParametersSet()
     {
         AllVehicles = db.GetAllVehicles();
+    }
+
+    private void NavigateToVehicleComponent(int id)
+    {
+        navigationManager.NavigateTo($"vehicle/{ id }");
+    }
+
+    private void NavigateToNewVehicleComponent()
+    {
+        navigationManager.NavigateTo($"newvehicle");
     }
 
 }

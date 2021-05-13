@@ -1,0 +1,50 @@
+﻿@page "/newexperiment/{SelectedVehicleId:int}"
+@inject IDatabaseData db
+@inject NavigationManager navigationManager
+
+<h3>Create New Experiment</h3>
+
+<EditForm Model="@experiment" OnValidSubmit="CreateNewExperiment">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <p>
+        <label>
+            Title:
+            <InputText @bind-Value="experiment.Title"
+                       DisplayName="Experiment Title" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Requirement to verify:
+            <InputText @bind-Value="experiment.Requirement"
+                       DisplayName="Experiment Requirement" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Description:
+            <InputTextArea @bind-Value="experiment.Description"
+                           DisplayName="Experiment Title" />
+        </label>
+    </p>
+
+    <button class="btn btn-primary" type="submit">Create</button>
+
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public int SelectedVehicleId { get; set; }
+
+    private NewExperimentComponentModel experiment = new();
+
+    private void CreateNewExperiment()
+    {
+        db.AddExperiment(experiment.Title, experiment.Requirement, experiment.Description, SelectedVehicleId);
+        navigationManager.NavigateTo($"/vehicle/{ SelectedVehicleId }");
+    }
+
+}

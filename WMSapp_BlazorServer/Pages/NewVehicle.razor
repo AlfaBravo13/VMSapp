@@ -1,0 +1,46 @@
+﻿@page "/NewVehicle"
+@inject IDatabaseData db
+@inject NavigationManager navigationManager
+
+<h3>Create New Vehicle</h3>
+
+<EditForm Model="@vehicle" OnValidSubmit="CreateNewVehicle">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <p>
+        <label>
+            Title:
+            <InputText @bind-Value="vehicle.Title" 
+                       DisplayName="Vehicle Title" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Vehicle Number:
+            <InputText @bind-Value="vehicle.VehicleNumber"
+                       DisplayName="Vehicle Number" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Build Number:
+            <InputText @bind-Value="vehicle.BuildNumber"
+                       DisplayName="Build Number" />
+        </label>
+    </p>
+
+    <button class="btn btn-primary" type="submit">Create</button>
+</EditForm>
+
+@code {
+
+    private NewVehicleComponentModel vehicle = new();
+
+    private void CreateNewVehicle()
+    {
+        db.AddVehicle(vehicle.Title, vehicle.VehicleNumber, vehicle.BuildNumber);
+        navigationManager.NavigateTo("dashboard");
+    }
+
+}
