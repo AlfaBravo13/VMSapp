@@ -1,0 +1,34 @@
+﻿@page
+@model VMSapp.Web.Pages.ViewVehicleModel
+@{
+    ViewData["Title"] = "Vehicle View";
+}
+
+<p>Title: @Model.Vehicle.Title</p>
+<p>Number: @Model.Vehicle.Number</p>
+<p>Build: @Model.Vehicle.BuildNumber</p>
+<p>Stage: @Model.Vehicle.Stage</p>
+
+<form method="post">
+    <input asp-for="@Model.ActiveId" value="@Model.ActiveId" type="hidden" />
+    <button asp-page-handler="promote" class="btn btn-primary">Promote</button>
+    <button asp-page-handler="demote" class="btn btn-primary">Demote</button>
+</form>
+
+<br />
+<br />
+
+<h1>Experiment list:</h1>
+<a class="btn btn-primary"
+   asp-page="/CreateExperiment"
+   asp-route-activeId="@Model.Vehicle.Id">Add</a>
+
+<ul class="list-group">
+    @foreach (var experiment in Model.AllVehicleExperiments)
+    {
+        <li class="list-group-item">@experiment.Title</li>
+        <a class="btn btn-primary"
+           asp-page="/ViewExperiment"
+           asp-route-activeId="@experiment.Id">View</a>
+    }
+</ul>

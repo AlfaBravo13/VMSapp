@@ -1,0 +1,38 @@
+﻿@page
+@model VMSapp.Web.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<a class="btn btn-primary" asp-page="/CreateVehicle">Create new vehicle</a>
+
+<br />
+
+<h2>Vehicles</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Number</th>
+            <th>Build</th>
+            <th>Stage</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vehicle in Model.AllVehicles)
+        {
+        <tr>
+            <td>@vehicle.Title</td>
+            <td>@vehicle.Number</td>
+            <td>@vehicle.BuildNumber</td>
+            <td>@vehicle.Stage</td>
+            <td><a class="btn btn-info"
+                   asp-page="/ViewVehicle"
+                   asp-route-activeId="@vehicle.Id">View</a></td>
+        </tr>
+        }
+    </tbody>
+</table>
