@@ -39,6 +39,21 @@ namespace VMSLibrary.Databases
 
         }
 
+        public async Task<List<T>> LoadDataAsync<T, U>(string storedProcedure,
+                                                       U parameters,
+                                                       string connectionStringName)
+        {
+            string connectionString = config.GetConnectionString(connectionStringName);
+
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var rows = await connection.QueryAsync<T>(storedProcedure,
+                                                          parameters,
+                                                          commandType: CommandType.StoredProcedure);
+                return rows.ToList();
+            }
+        }
+
         public void SaveData<T>(string sqlStatement,
                                 T parameters,
                                 string connectionStringName,
@@ -55,6 +70,20 @@ namespace VMSLibrary.Databases
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 connection.Execute(sqlStatement, parameters, commandType: commandType);
+            }
+        }
+
+        public async Task SaveDataAsync<T>(string storedProcedure,
+                                           T parameters,
+                                           string connectionStringName)
+        {
+            string connectionString = config.GetConnectionString(connectionStringName);
+
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.ExecuteAsync(storedProcedure,
+                                              parameters,
+                                              commandType: CommandType.StoredProcedure);
             }
         }
     }

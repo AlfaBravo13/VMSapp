@@ -1,57 +1,66 @@
 ﻿@page "/vehicle/{ActiveId:int}"
 @inject IDatabaseData db
-@inject NavigationManager navigationManager 
+@inject NavigationManager navigationManager
 
-<p>Title: @ShowedVehicle.Title</p>
-<p>Number: @ShowedVehicle.Number</p>
-<p>Build: @ShowedVehicle.BuildNumber</p>
-<p>Stage: @ShowedVehicle.Stage</p>
-
-<button class="btn btn-primary" @onclick="PromoteVehicleStage">
-    Promote
-</button>
-<button class="btn btn-primary" @onclick="DemoteVehicleStage">
-    Demote
-</button>
-
-<br />
-<br />
-
-<h1>Experiment list:</h1>
-
-<button class="btn btn-primary" @onclick="() => NavigateToNewExperimentComponent(ActiveId)">
-    Create New Experiment
-</button>
-
-@foreach (var experiment in AllVehicleExperiments)
+@if (showedVehicle == null && allVehicleExperiments == null)
 {
-    <p>@experiment.Title</p>
-    <button class="btn btn-primary" @onclick="() => NavigateToExperimentComponent(experiment.Id)">
-        View
+    <h1>Loading...</h1>
+}
+else
+{
+    <p>Title:  @showedVehicle.Title</p>
+    <p>Number: @showedVehicle.Number</p>
+    <p>Build:  @showedVehicle.BuildNumber</p>
+    <p>Stage:  @showedVehicle.Stage</p>
+
+    <button class="btn btn-primary" @onclick="PromoteVehicleStage">
+        Promote
     </button>
+    <button class="btn btn-primary" @onclick="DemoteVehicleStage">
+        Demote
+    </button>
+
+    <br />
+    <br />
+
+    <h1>Experiment list:</h1>
+
+    <button class="btn btn-primary" @onclick="() => NavigateToNewExperimentComponent(ActiveId)">
+        Create New Experiment
+    </button>
+
+    @foreach (var experiment in allVehicleExperiments)
+    {
+        <p>@experiment.Title</p>
+        <button class="btn btn-primary" @onclick="() => NavigateToExperimentComponent(experiment.Id)">
+            View
+        </button>
+    }
 }
 
 @code {
     [Parameter]
     public int ActiveId { get; set; }
 
-    private VehicleModel ShowedVehicle { get; set; }
-    private List<ExperimentModel> AllVehicleExperiments { get; set; }
+    private VehicleModel showedVehicle;
+    private List<ExperimentModel> allVehicleExperiments;
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        ShowedVehicle = db.GetSelectedVehicle(ActiveId);
-        AllVehicleExperiments = db.GetVehicleExperiments(ActiveId);
+        showedVehicle = await db.GetSelectedVehicle(ActiveId);
+        allVehicleExperiments = await db.GetVehicleExperiments(ActiveId);
     }
 
     private void PromoteVehicleStage()
     {
         db.PromoteVehicleStage(ActiveId);
+        navigationManager.NavigateTo($"vehicle/{ ActiveId }");
     }
 
     private void DemoteVehicleStage()
     {
         db.DemoteVehicleStage(ActiveId);
+        navigationManager.NavigateTo($"vehicle/{ ActiveId }");
     }
 
     private void NavigateToExperimentComponent(int id)
@@ -64,4 +73,4 @@
         navigationManager.NavigateTo($"newexperiment/{ id }");
     }
 
-}
+    }

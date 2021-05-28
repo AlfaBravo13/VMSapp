@@ -18,69 +18,68 @@ namespace VMSLibrary.Data
             this.db = db;
         }
 
-        public List<VehicleModel> GetAllVehicles()
+        public async Task<List<VehicleModel>> GetAllVehicles()
         {
-            return db.LoadData<VehicleModel, dynamic>("dbo.spVehicles_GetAllVehicles",
-                                                      new { },
-                                                      connectionStringName,
-                                                      true);
+
+            var vehicle = await db.LoadDataAsync<VehicleModel, dynamic>("dbo.spVehicles_GetAllVehicles",
+                                                                        new { },
+                                                                        connectionStringName);
+
+            return vehicle.ToList<VehicleModel>();
         }
 
-        public VehicleModel GetSelectedVehicle(int activeId)
+        public async Task<VehicleModel> GetSelectedVehicle(int activeId)
         {
-            return db.LoadData<VehicleModel, dynamic>("dbo.spVehicles_GetSelectedVehicle",
-                                                      new { activeId },
-                                                      connectionStringName,
-                                                      true).First();
+            var vehicle = await db.LoadDataAsync<VehicleModel, dynamic>("dbo.spVehicles_GetSelectedVehicle",
+                                                                        new { activeId },
+                                                                        connectionStringName);
+
+            return vehicle.FirstOrDefault();
         }
 
-        public List<ExperimentModel> GetVehicleExperiments(int activeId)
+        public async Task<List<ExperimentModel>> GetVehicleExperiments(int activeId)
         {
-            return db.LoadData<ExperimentModel, dynamic>("dbo.spExperiments_GetVehicleExperiments",
-                                                         new { activeId },
-                                                         connectionStringName,
-                                                         true);
+            return await db.LoadDataAsync<ExperimentModel, dynamic>("dbo.spExperiments_GetVehicleExperiments",
+                                                                    new { activeId },
+                                                                    connectionStringName);
         }
 
-        public ExperimentModel GetSelectedExperiment(int activeId)
+        public async Task<ExperimentModel> GetSelectedExperiment(int activeId)
         {
-            return db.LoadData<ExperimentModel, dynamic>("dbo.spExperiments_GetSelectedExperiment",
-                                                         new { activeId },
-                                                         connectionStringName,
-                                                         true).First();
+            var experiment = await db.LoadDataAsync<ExperimentModel, dynamic>("dbo.spExperiments_GetSelectedExperiment",
+                                                                              new { activeId },
+                                                                              connectionStringName);
+
+            return experiment.FirstOrDefault();
         }
 
-        public void AddVehicle(string title, string number, string buildnumber)
+        public async Task AddVehicle(string title, string number, string buildnumber)
         {
-            db.SaveData("dbo.spVehicles_AddVehicle",
-                        new { title, number, buildnumber },
-                        connectionStringName,
-                        true);
+            await db.SaveDataAsync("dbo.spVehicles_AddVehicle",
+                                   new { title, number, buildnumber },
+                                   connectionStringName);
         }
 
-        public void AddExperiment(string title, string requirement, string description, int vehicleId)
+        public async Task AddExperiment(string title, string requirement, string description, int vehicleId)
         {
-            db.SaveData("dbo.spExperiments_AddExperiment",
-                        new { title, requirement, description, vehicleId},
-                        connectionStringName,
-                        true);
+            await db.SaveDataAsync("dbo.spExperiments_AddExperiment",
+                                   new { title, requirement, description, vehicleId },
+                                   connectionStringName);
 
         }
 
-        public void PromoteVehicleStage(int activeId)
+        public async Task PromoteVehicleStage(int activeId)
         {
-            db.SaveData("dbo.spVehicles_PromoteVehicleStage",
+            await db.SaveDataAsync("dbo.spVehicles_PromoteVehicleStage",
+                              new { activeId },
+                              connectionStringName);
+        }
+
+        public async Task DemoteVehicleStage(int activeId)
+        {
+            await db.SaveDataAsync("dbo.spVehicles_DemoteVehicleStage",
                         new { activeId },
-                        connectionStringName,
-                        true);
-        }
-
-        public void DemoteVehicleStage(int activeId)
-        {
-            db.SaveData("dbo.spVehicles_DemoteVehicleStage",
-                        new { activeId },
-                        connectionStringName,
-                        true);
+                        connectionStringName);
         }
     }
 }

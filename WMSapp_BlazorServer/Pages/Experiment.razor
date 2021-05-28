@@ -1,12 +1,21 @@
 ﻿@page "/experiment/{ActiveId:int}"
 @inject IDatabaseData db
-<h3>Experiment</h3>
 
-<h1>Title: <strong>@ShowedExperiment.Title</strong></h1>
-<h2>Requirement:</h2>
-<p>@ShowedExperiment.Requirement</p>
-<h2>Description:</h2>
-<p>@ShowedExperiment.Description</p>
+@if (ShowedExperiment == null)
+{
+    <h1>Loading</h1>
+}
+else
+{
+    <h3>Experiment</h3>
+
+    <h1>Title: <strong>@ShowedExperiment.Title</strong></h1>
+    <h2>Requirement:</h2>
+    <p>@ShowedExperiment.Requirement</p>
+    <h2>Description:</h2>
+    <p>@ShowedExperiment.Description</p>
+}
+
 
 @code {
     [Parameter]
@@ -14,8 +23,9 @@
 
     public ExperimentModel ShowedExperiment { get; set; }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        ShowedExperiment = db.GetSelectedExperiment(ActiveId);
+        ShowedExperiment = await db.GetSelectedExperiment(ActiveId);
     }
+
 }

@@ -1,37 +1,46 @@
-﻿@page "/NewVehicle"
+﻿@page "/newvehicle"
 @inject IDatabaseData db
 @inject NavigationManager navigationManager
 
-<h3>Create New Vehicle</h3>
+<div class="text-center">
+    <br />
 
-<EditForm Model="@vehicle" OnValidSubmit="CreateNewVehicle">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+    <h1>Create New Vehicle</h1>
 
-    <p>
-        <label>
-            Title:
-            <InputText @bind-Value="vehicle.Title" 
-                       DisplayName="Vehicle Title" />
-        </label>
-    </p>
-    <p>
-        <label>
-            Vehicle Number:
-            <InputText @bind-Value="vehicle.VehicleNumber"
-                       DisplayName="Vehicle Number" />
-        </label>
-    </p>
-    <p>
-        <label>
-            Build Number:
-            <InputText @bind-Value="vehicle.BuildNumber"
-                       DisplayName="Build Number" />
-        </label>
-    </p>
 
-    <button class="btn btn-primary" type="submit">Create</button>
-</EditForm>
+    <EditForm Model="@vehicle" OnValidSubmit="CreateNewVehicle">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <p class="text-right m-3">
+            <label>
+                Title:
+                <InputText @bind-Value="vehicle.Title"
+                           DisplayName="Vehicle Title" />
+            </label>
+        </p>
+        <p class="text-right m-3">
+            <label>
+                Vehicle Number:
+                <InputText @bind-Value="vehicle.VehicleNumber"
+                           DisplayName="Vehicle Number" />
+            </label>
+        </p>
+        <p class="text-right m-3">
+            <label>
+                Build Number:
+                <InputText @bind-Value="vehicle.BuildNumber"
+                           DisplayName="Build Number" />
+            </label>
+        </p>
+
+        <button class="btn btn-primary m-3" type="submit">Create</button>
+    </EditForm>
+
+    <br />
+
+</div>
+
 
 @code {
 
@@ -40,7 +49,7 @@
     private void CreateNewVehicle()
     {
         db.AddVehicle(vehicle.Title, vehicle.VehicleNumber, vehicle.BuildNumber);
-        navigationManager.NavigateTo("dashboard");
+        navigationManager.NavigateTo($"vehiclelist");
     }
 
 }

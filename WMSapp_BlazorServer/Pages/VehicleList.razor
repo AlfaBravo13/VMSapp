@@ -1,0 +1,56 @@
+﻿@page "/vehiclelist"
+@inject IDatabaseData db
+@inject NavigationManager navigationManager
+
+<button class="btn btn-primary" @onclick="() => NavigateToNewVehiclePage()">Create New Vehicle</button>
+
+
+<hr />
+<br />
+
+<h1>Vehicle List</h1>
+
+@if (allVehicles == null)
+{
+    <h2>Loading...</h2>
+}
+else
+{
+    <div class="row">
+        @foreach (var vehicle in allVehicles)
+        {
+            <div class="card text-center m-2">
+                <h4 class="card-header">
+                    @vehicle.Title
+                </h4>
+                <div class="card-body">
+                    <h5 class="card-title">@vehicle.Number / @vehicle.BuildNumber</h5>
+                    <h6 class="card-subtitle mb-2">@vehicle.Stage</h6>
+                    <button class="btn btn-primary" @onclick="() => NavigateToVehicleComponent(vehicle.Id)">
+                        View
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<VehicleModel> allVehicles;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        allVehicles = await db.GetAllVehicles();
+    }
+
+    private void NavigateToVehicleComponent(int id)
+    {
+        navigationManager.NavigateTo($"vehicle/{ id }");
+    }
+
+    private void NavigateToNewVehiclePage()
+    {
+        navigationManager.NavigateTo($"newvehicle");
+    }
+
+}
