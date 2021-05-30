@@ -1,31 +1,82 @@
 ﻿@page "/experiment/{ActiveId:int}"
 @inject IDatabaseData db
 
-@if (ShowedExperiment == null)
+@if (showedExperiment == null)
 {
-    <h1>Loading</h1>
+    <div class="container text-center headline">
+        <h2>Loading...</h2>
+    </div>
 }
 else
 {
-    <h3>Experiment</h3>
+<div class="container p-4 headline">
+    <h2 class="text-center"><strong>@showedExperiment.Title</strong></h2>
+    <h3>Requirement:</h3>
+    <p class="p-2 field">@showedExperiment.Requirement</p>
+    <h3>Description:</h3>
+    <p class="p-2 field">@showedExperiment.Description</p>
+    <button class="btn btn-primary m-2" @onclick="() => showEditForm = true">
+        Edit
+    </button>
+    @if (showEditForm)
+    {
+<EditForm Model="@editedExperiment" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
-    <h1>Title: <strong>@ShowedExperiment.Title</strong></h1>
-    <h2>Requirement:</h2>
-    <p>@ShowedExperiment.Requirement</p>
-    <h2>Description:</h2>
-    <p>@ShowedExperiment.Description</p>
+    <div class="form-group">
+        <label>Title:</label>
+        <InputText @bind-Value="editedExperiment.Title"
+                   DisplayName="Experiment Title"
+                   class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Requirement to verify:</label>
+        <InputText @bind-Value="editedExperiment.Requirement"
+                   DisplayName="Experiment Requirement"
+                   class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Description:</label>
+        <InputText @bind-Value="editedExperiment.Description"
+                   DisplayName="Experiment Description"
+                   class="form-control" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Update</button>
+
+</EditForm>
+    }
+</div>
 }
-
 
 @code {
     [Parameter]
     public int ActiveId { get; set; }
 
-    public ExperimentModel ShowedExperiment { get; set; }
+    private ExperimentModel showedExperiment;
+    private ExperimentModel editedExperiment = new ExperimentModel();
+    private bool showEditForm = false;
+
 
     protected override async Task OnParametersSetAsync()
     {
-        ShowedExperiment = await db.GetSelectedExperiment(ActiveId);
+        showedExperiment = await db.GetSelectedExperiment(ActiveId);
+
+        editedExperiment.Title = showedExperiment.Title;
+        editedExperiment.Requirement = showedExperiment.Requirement;
+        editedExperiment.Description = showedExperiment.Description;
     }
 
+    private async Task HandleValidSubmit()
+    {
+        await db.UpdateExperiment(ActiveId,
+                                  editedExperiment.Title,
+                                  editedExperiment.Requirement, 
+                                  editedExperiment.Description);
+
+        showedExperiment.Title = editedExperiment.Title;
+        showedExperiment.Requirement = editedExperiment.Requirement;
+        showedExperiment.Description = editedExperiment.Description;
+    }
 }

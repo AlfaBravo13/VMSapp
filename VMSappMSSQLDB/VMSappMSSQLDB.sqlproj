@@ -75,6 +75,10 @@
     <Build Include="dbo\StoredProcedures\spExperiments_AddExperiment.sql" />
     <Build Include="dbo\StoredProcedures\spVehicles_PromoteVehicleStage.sql" />
     <Build Include="dbo\StoredProcedures\spVehicles_DemoteVehicleStage.sql" />
+    <Build Include="dbo\StoredProcedures\spVehicles_DeleteVehicle.sql" />
+    <Build Include="dbo\StoredProcedures\spExperiments_DeleteExperiment.sql" />
+    <Build Include="dbo\StoredProcedures\spVehicles_UpdateVehicle.sql" />
+    <Build Include="dbo\StoredProcedures\sp_Experiments_UpdateExperiment.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\Script.PostDeployment.sql" />

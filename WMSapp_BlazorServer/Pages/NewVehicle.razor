@@ -2,11 +2,9 @@
 @inject IDatabaseData db
 @inject NavigationManager navigationManager
 
-<div class="text-center">
-    <br />
-
+<div class="container text-center p-4">
+    
     <h1>Create New Vehicle</h1>
-
 
     <EditForm Model="@vehicle" OnValidSubmit="CreateNewVehicle">
         <DataAnnotationsValidator />
@@ -34,13 +32,10 @@
             </label>
         </p>
 
-        <button class="btn btn-primary m-3" type="submit">Create</button>
+        <button class="btn btn-primary" type="submit">Create</button>
     </EditForm>
 
-    <br />
-
 </div>
-
 
 @code {
 

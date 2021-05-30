@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using VMSLibrary.Databases;
 using VMSLibrary.Models;
@@ -60,12 +58,40 @@ namespace VMSLibrary.Data
                                    connectionStringName);
         }
 
+        public async Task DeleteVehicle(int id)
+        {
+            await db.SaveDataAsync("dbo.spVehicles_DeleteVehicle",
+                                   new { id },
+                                   connectionStringName);
+        }
+
+        public async Task UpdateVehicle(int id, string title, string number, string buildNumber)
+        {
+            await db.SaveDataAsync("dbo.spVehicles_UpdateVehicle",
+                                   new { Id = id, Title = title, Number = number, BuildNumber = buildNumber },
+                                   connectionStringName);
+        }
+
         public async Task AddExperiment(string title, string requirement, string description, int vehicleId)
         {
             await db.SaveDataAsync("dbo.spExperiments_AddExperiment",
                                    new { title, requirement, description, vehicleId },
                                    connectionStringName);
 
+        }
+
+        public async Task DeleteExperiment(int vehicleId, int experimentId)
+        {
+            await db.SaveDataAsync("dbo.spExperiments_DeleteExperiment",
+                                   new { vehicleId, experimentId },
+                                   connectionStringName);
+        }
+
+        public async Task UpdateExperiment(int id, string title, string requirement, string description)
+        {
+            await db.SaveDataAsync("dbo.sp_Experiments_UpdateExperiment",
+                        new { id, title, requirement, description },
+                        connectionStringName);
         }
 
         public async Task PromoteVehicleStage(int activeId)
@@ -81,5 +107,7 @@ namespace VMSLibrary.Data
                         new { activeId },
                         connectionStringName);
         }
+
+       
     }
 }

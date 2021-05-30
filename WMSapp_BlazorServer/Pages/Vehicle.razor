@@ -4,38 +4,112 @@
 
 @if (showedVehicle == null && allVehicleExperiments == null)
 {
-    <h1>Loading...</h1>
+    <div class="container text-center headline">
+        <h2>Loading...</h2>
+    </div>
 }
 else
 {
-    <p>Title:  @showedVehicle.Title</p>
-    <p>Number: @showedVehicle.Number</p>
-    <p>Build:  @showedVehicle.BuildNumber</p>
-    <p>Stage:  @showedVehicle.Stage</p>
+    <div class="container p-4">
+        <div class="row">
+            <div class="col-6">
+                <h4>Title: @showedVehicle.Title</h4>
+                <h4>Number: @showedVehicle.Number</h4>
+                <h4>Build: @showedVehicle.BuildNumber</h4>
+                <h4>Stage: @showedVehicle.Stage</h4>
+            </div>
+            <div class="col-6">
+                @if (showEditForm == false)
+                {
+                    <button class="btn btn-primary m-2" @onclick="() => showEditForm = true">
+                        Edit
+                    </button>
+                }
+                else
+                {
+            <EditForm Model="@editedVehicle" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
-    <button class="btn btn-primary" @onclick="PromoteVehicleStage">
-        Promote
-    </button>
-    <button class="btn btn-primary" @onclick="DemoteVehicleStage">
-        Demote
-    </button>
+                <div class="form-group">
+                    <label>Title:</label>
+                    <InputText @bind-Value="editedVehicle.Title"
+                               DisplayName="Vehicle Title"
+                               class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Title:</label>
+                    <InputText @bind-Value="editedVehicle.Number"
+                               DisplayName="Vehicle Number"
+                               class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Title:</label>
+                    <InputText @bind-Value="editedVehicle.BuildNumber"
+                               DisplayName="Build Number"
+                               class="form-control" />
+                </div>
+
+                <button class="btn btn-primary" type="submit">Update</button>
+
+            </EditForm>
+                }
+
+            </div>
+
+        </div>
+        <hr />
+
+        <div class="row">
+            <div class="col-6 text-center">
+                <button class="btn btn-primary" @onclick="PromoteVehicleStage">
+                    Promote
+                </button>
+            </div>
+            <div class="col-6 text-center">
+                <button class="btn btn-primary" @onclick="DemoteVehicleStage">
+                    Demote
+                </button>
+            </div>
+        </div>
+    </div>
 
     <br />
     <br />
 
-    <h1>Experiment list:</h1>
+    <div class="container list p-2 ">
+        <h1>Experiment list:</h1>
 
-    <button class="btn btn-primary" @onclick="() => NavigateToNewExperimentComponent(ActiveId)">
-        Create New Experiment
-    </button>
-
-    @foreach (var experiment in allVehicleExperiments)
-    {
-        <p>@experiment.Title</p>
-        <button class="btn btn-primary" @onclick="() => NavigateToExperimentComponent(experiment.Id)">
-            View
+        <button class="btn btn-primary" @onclick="() => NavigateToNewExperimentComponent(ActiveId)">
+            Create New Experiment
         </button>
-    }
+
+        @foreach (var experiment in allVehicleExperiments)
+        {
+        <div class="card text-center m-2">
+            <h4 class="card-header">@experiment.Title</h4>
+            <div class="card-body">
+                <button class="btn btn-primary m-2" @onclick="() => NavigateToExperimentComponent(experiment.Id)">
+                    View
+                </button>
+                @if (experimentToDelete == experiment.Id)
+                {
+                    <button class="btn btn-danger m-2" @onclick="(() => DeleteExperiment(experiment.Id))">
+                        Confirm Delete
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-outline-danger m-2" @onclick="(() => experimentToDelete = experiment.Id)">
+                        Delete
+                    </button>
+                }
+            </div>
+        </div>
+            
+        }
+    </div>
+    
 }
 
 @code {
@@ -44,23 +118,46 @@ else
 
     private VehicleModel showedVehicle;
     private List<ExperimentModel> allVehicleExperiments;
+    private int experimentToDelete;
+    private bool showEditForm = false;
+    private VehicleModel editedVehicle = new VehicleModel();
 
     protected override async Task OnParametersSetAsync()
     {
         showedVehicle = await db.GetSelectedVehicle(ActiveId);
         allVehicleExperiments = await db.GetVehicleExperiments(ActiveId);
+
+        editedVehicle.Title = showedVehicle.Title;
+        editedVehicle.Number = showedVehicle.Number;
+        editedVehicle.BuildNumber = showedVehicle.BuildNumber;
     }
 
-    private void PromoteVehicleStage()
+    private async Task PromoteVehicleStage()
     {
-        db.PromoteVehicleStage(ActiveId);
-        navigationManager.NavigateTo($"vehicle/{ ActiveId }");
+        await db.PromoteVehicleStage(ActiveId);
+        showedVehicle = await db.GetSelectedVehicle(ActiveId);
     }
 
-    private void DemoteVehicleStage()
+    private async Task DemoteVehicleStage()
     {
-        db.DemoteVehicleStage(ActiveId);
-        navigationManager.NavigateTo($"vehicle/{ ActiveId }");
+        await db.DemoteVehicleStage(ActiveId);
+        showedVehicle = await db.GetSelectedVehicle(ActiveId);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await db.UpdateVehicle(ActiveId, editedVehicle.Title, editedVehicle.Number, editedVehicle.BuildNumber);
+
+        showedVehicle.Title = editedVehicle.Title;
+        showedVehicle.Number = editedVehicle.Number;
+        showedVehicle.BuildNumber = editedVehicle.BuildNumber;
+    }
+
+    private async Task DeleteExperiment(int experimentId)
+    {
+        await db.DeleteExperiment(ActiveId, experimentId);
+        allVehicleExperiments.Remove(allVehicleExperiments.Where(x => x.Id == experimentId).FirstOrDefault());
+        experimentToDelete = 0;
     }
 
     private void NavigateToExperimentComponent(int id)
@@ -68,9 +165,9 @@ else
         navigationManager.NavigateTo($"experiment/{ id }");
     }
 
-    private void NavigateToNewExperimentComponent(int id )
+    private void NavigateToNewExperimentComponent(int id)
     {
         navigationManager.NavigateTo($"newexperiment/{ id }");
     }
 
-    }
+}

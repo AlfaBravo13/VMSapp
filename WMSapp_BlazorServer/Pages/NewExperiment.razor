@@ -2,37 +2,42 @@
 @inject IDatabaseData db
 @inject NavigationManager navigationManager
 
-<h3>Create New Experiment</h3>
 
-<EditForm Model="@experiment" OnValidSubmit="CreateNewExperiment">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<div class="container text-center p-4">
 
-    <p>
-        <label>
-            Title:
-            <InputText @bind-Value="experiment.Title"
-                       DisplayName="Experiment Title" />
-        </label>
-    </p>
-    <p>
-        <label>
-            Requirement to verify:
-            <InputText @bind-Value="experiment.Requirement"
-                       DisplayName="Experiment Requirement" />
-        </label>
-    </p>
-    <p>
-        <label>
-            Description:
-            <InputTextArea @bind-Value="experiment.Description"
+    <h1>Create New Experiment</h1>
+
+    <EditForm Model="@experiment" OnValidSubmit="CreateNewExperiment">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <p class="text-right m-3">
+            <label>
+                Title:
+                <InputText @bind-Value="experiment.Title"
                            DisplayName="Experiment Title" />
-        </label>
-    </p>
+            </label>
+        </p>
+        <p class="text-right m-3">
+            <label>
+                Requirement to verify:
+                <InputText @bind-Value="experiment.Requirement"
+                           DisplayName="Experiment Requirement" />
+            </label>
+        </p>
+        <p class="text-right m-3">
+            <label>
+                Description:
+                <InputTextArea @bind-Value="experiment.Description"
+                               DisplayName="Experiment Title" />
+            </label>
+        </p>
 
-    <button class="btn btn-primary" type="submit">Create</button>
+        <button class="btn btn-primary" type="submit">Create</button>
 
-</EditForm>
+    </EditForm>
+</div>
+
 
 @code {
 
