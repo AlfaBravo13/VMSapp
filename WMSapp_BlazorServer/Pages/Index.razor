@@ -1,5 +1,10 @@
-﻿@page "/"
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Configuration
 
+@page "/"
+@inject RoleManager<IdentityRole> roleManager
+@inject UserManager<IdentityUser> userManager
+@inject IConfiguration config
 
 <div class="jumbotron">
     <h1 class="display-4">VMS - Verifcation Management System</h1>
@@ -7,3 +12,29 @@
     <p class="lead">System to manage verification program of physical products.</p>
 </div>
 
+@code {
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await SetUpAuth();
+    }
+
+    private async Task SetUpAuth()
+    {
+        string role = "Administrator";
+
+        var roleExist = await roleManager.RoleExistsAsync(role);
+
+        if (roleExist == false)
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+
+        var user = await userManager.FindByEmailAsync(config.GetValue<string>("AdminUser"));
+
+        if (user != null)
+        {
+            await userManager.AddToRoleAsync(user, "Administrator");
+        }
+    }
+}

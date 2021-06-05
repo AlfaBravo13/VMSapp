@@ -11,27 +11,24 @@
         <DataAnnotationsValidator />
         <ValidationSummary />
 
-        <p class="text-right m-3">
-            <label>
-                Title:
-                <InputText @bind-Value="vehicle.Title"
-                           DisplayName="Vehicle Title" />
-            </label>
-        </p>
-        <p class="text-right m-3">
-            <label>
-                Vehicle Number:
-                <InputText @bind-Value="vehicle.VehicleNumber"
-                           DisplayName="Vehicle Number" />
-            </label>
-        </p>
-        <p class="text-right m-3">
-            <label>
-                Build Number:
-                <InputText @bind-Value="vehicle.BuildNumber"
-                           DisplayName="Build Number" />
-            </label>
-        </p>
+        <div class="form-group">
+            <label>Title:</label>
+            <InputText @bind-Value="vehicle.Title"
+                       DisplayName="Vehicle Title"
+                       class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label>Vehicle Number:</label>
+            <InputText @bind-Value="vehicle.Number"
+                       DisplayName="Vehicle Number"
+                       class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Build Number:</label>
+            <InputText @bind-Value="vehicle.BuildNumber"
+                       DisplayName="Build Number"
+                       class="form-control" />
+        </div>
 
         <button class="btn btn-primary" type="submit">Create</button>
     </EditForm>
@@ -44,7 +41,7 @@
 
     private void CreateNewVehicle()
     {
-        db.AddVehicle(vehicle.Title, vehicle.VehicleNumber, vehicle.BuildNumber);
+        db.AddVehicle(vehicle.Title, vehicle.Number, vehicle.BuildNumber);
         navigationManager.NavigateTo($"vehiclelist");
     }
 

@@ -16,7 +16,7 @@ namespace WMSapp_BlazorServer.Models
 
         [Required]
         [StringLength(10, ErrorMessage = "The Vehicle Number is too long")]
-        public string VehicleNumber { get; set; }
+        public string Number { get; set; }
 
         [Required]
         [StringLength(10, ErrorMessage = "The Build Number is too long")]
