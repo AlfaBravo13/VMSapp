@@ -1,13 +1,18 @@
 ﻿@page "/vehiclelist"
+@attribute [Authorize]
 @inject IDatabaseData db
 @inject NavigationManager navigationManager
 
-<div class="container">
-    <button class="btn btn-primary" @onclick="() => NavigateToNewVehiclePage()">Create New Vehicle</button>
-</div>
+<AuthorizeView Roles="Administrator">
+    <Authorized>
+        <div class="container">
+            <button class="btn btn-primary" @onclick="() => NavigateToNewVehiclePage()">Create New Vehicle</button>
+        </div>
+        <hr />
+        <br />
+    </Authorized>
+</AuthorizeView>
 
-<hr />
-<br />
 <div class="container text-center headline">
     <h1>Vehicle List</h1>
 </div>
@@ -34,19 +39,22 @@ else
                         <button class="btn btn-primary m-2" @onclick="() => NavigateToVehicleComponent(vehicle.Id)">
                             View
                         </button>
-                        @if (vehicleToDelete == vehicle.Id)
-                        {
-                            <button class="btn btn-danger m-2" @onclick="(() => DeleteVehicle(vehicle.Id))">
-                                Confirm Delete
-                            </button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-outline-danger m-2" @onclick="(() => vehicleToDelete = vehicle.Id)">
-                                Delete
-                            </button>
-                        }
-
+                        <AuthorizeView Roles="Administrator">
+                            <Authorized>
+                                @if (vehicleToDelete == vehicle.Id)
+                                {
+                                    <button class="btn btn-danger m-2" @onclick="(() => DeleteVehicle(vehicle.Id))">
+                                        Confirm Delete
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-danger m-2" @onclick="(() => vehicleToDelete = vehicle.Id)">
+                                        Delete
+                                    </button>
+                                }
+                            </Authorized>
+                        </AuthorizeView>
                     </div>
                 </div>
             }

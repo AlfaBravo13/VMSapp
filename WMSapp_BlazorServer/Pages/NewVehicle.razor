@@ -1,4 +1,5 @@
 ﻿@page "/newvehicle"
+@attribute [Authorize(Roles = "Administrator")]
 @inject IDatabaseData db
 @inject NavigationManager navigationManager
 
