@@ -1,6 +1,6 @@
-# VMS - Verification Management System
+<h1 align="center"> VMS - Verification Management System </h1>
 
-![Screenshot](/images/title.png)
+![Screenshot](/Images/title.png)
 
 ## [Live Demo](https://verificationmanagementsystem.azurewebsites.net/)
 
